@@ -1,11 +1,9 @@
-from flask import Flask, jsonify, request # type: ignore
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-users = {
-    "jane": {"username": "jane", "name": "Jane", "age": 28, "city": "Los Angeles"},
-    "john": {"username": "john", "name": "John", "age": 30, "city": "New York"},
-}
+# Başlanğıcda boş istifadəçilər
+users = {}
 
 @app.route("/")
 def home():
@@ -13,6 +11,7 @@ def home():
 
 @app.route("/data")
 def get_usernames():
+    # İstifadəçi adlarının siyahısını JSON şəklində qaytar
     return jsonify(list(users.keys()))
 
 @app.route("/status")
@@ -30,24 +29,18 @@ def get_user(username):
 @app.route("/add_user", methods=["POST"])
 def add_user():
     data = request.get_json()
-
     if not data:
         return jsonify({"error": "Invalid JSON"}), 400
-
+    
     username = data.get("username")
     if not username:
         return jsonify({"error": "Username is required"}), 400
 
-    users[username] = {
-        "username": username,
-        "name": data.get("name", ""),
-        "age": data.get("age", 0),
-        "city": data.get("city", "")
-    }
-
+    # Əgər username artıq varsa, onu yenilə (istəyə görə dəyişə bilərsən)
+    users[username] = data
     return jsonify({
         "message": "User added",
-        "user": users[username]
+        "user": data
     }), 201
 
 if __name__ == "__main__":

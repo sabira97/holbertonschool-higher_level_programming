@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./restful-api/task_04_",
+        "./restful-api/task_04_"
+    ]
+}
